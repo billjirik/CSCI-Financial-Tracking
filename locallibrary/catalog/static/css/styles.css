@@ -11,4 +11,17 @@
     padding: 0;
     margin: 0;
   }
-  
+
+
+.sidebar-nav li {
+  margin-bottom: 10px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.home-link {
+  font-size: 1.2rem;
+}
+
