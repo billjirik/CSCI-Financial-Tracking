@@ -30,10 +30,13 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('',RedirectView.as_view(url='catalog/', permanent = True)),
+    path('',RedirectView.as_view(url='catalog/')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
+urlpatterns += [
+    path('accounts/', include('django.contrib.auth.urls')),
+]
 
