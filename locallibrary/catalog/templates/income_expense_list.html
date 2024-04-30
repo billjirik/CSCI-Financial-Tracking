@@ -1,0 +1,172 @@
+<!-- income_expense_list.html -->
+
+{% extends 'base_generic.html' %}
+
+{% block title %}
+<h3>Income & Expenses</h3>
+{% endblock %}
+
+{% block content %}
+<h2>Incomes</h2>
+<ul>
+  {% for income in incomes %}
+  <li id="income_{{ income.id }}"
+  data-name="{{ income.name }}"
+  data-amount="{{ income.amount }}"
+  data-category="{{ income.category }}"
+  data-frequency="{{ income.frequency }}"
+  data-date="{{ income.date|date:'Y-m-d' }}">
+      {{ income.name }} - ${{ income.amount }}
+      <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="edit_income" value="{{ income.id }}">
+        <button type="button" onclick="toggleEditIncomeForm('{{ income.id }}')">Edit</button>
+      </form>
+      <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="delete_income" value="{{ income.id }}">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+
+<button onclick="toggleAddIncomeForm()">Add Income</button>
+<form id="addIncomeForm" method="post" style="display: none;">
+    {% csrf_token %}
+    {{ income_add_form.as_p }}
+    <button type="submit" name="income_submit">Submit</button>
+    <button type="button" onclick="cancelAddIncome()">Cancel</button>
+</form>
+
+<!-- Edit Form for Income -->
+<form id="editIncomeForm" method="post" style="display: none;">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Name">
+    <input type="text" name="amount" placeholder="Amount">
+    <input type="text" name="category" placeholder="Category">
+    <input type="text" name="frequency" placeholder="Frequency">
+    <input type="date" name="date" placeholder="Date">
+    <button type="submit" name="edit_income_submit">Submit</button>
+    <button type="button" onclick="cancelEditIncome()">Cancel</button>
+</form>
+
+
+<h2>Expenses</h2>
+<ul>
+  {% for expense in expenses %}
+  <li id="expense_{{ expense.id }}"
+  data-name="{{ expense.name }}"
+  data-amount="{{ expense.amount }}"
+  data-category="{{ expense.category }}"
+  data-frequency="{{ expense.frequency }}"
+  data-date="{{ expense.date|date:'Y-m-d' }}">
+      {{ expense.name }} - ${{ expense.amount }}
+      <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="edit_expense" value="{{ expense.id }}">
+        <button type="button" onclick="toggleEditExpenseForm('{{ expense.id }}')">Edit</button>
+
+      </form>
+      <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="delete_expense" value="{{ expense.id }}">
+        <button type="submit">Delete</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+
+<button onclick="toggleAddExpenseForm()">Add Expense</button>
+<form id="addExpenseForm" method="post" style="display: none;">
+    {% csrf_token %}
+    {{ expense_add_form.as_p }}
+    <button type="submit" name="expense_submit">Submit</button>
+    <button type="button" onclick="cancelAddExpense()">Cancel</button>
+</form>
+
+<!-- Edit Form for Expense -->
+<form id="editExpenseForm" method="post" style="display: none;">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Name">
+    <input type="text" name="amount" placeholder="Amount">
+    <input type="text" name="category" placeholder="Category">
+    <input type="text" name="frequency" placeholder="Frequency">
+    <input type="date" name="date" placeholder="Date">
+    <button type="submit" name="edit_expense_submit">Submit</button>
+    <button type="button" onclick="cancelEditExpense()">Cancel</button>
+</form>
+
+
+<script>
+    function toggleAddIncomeForm() {
+        hideAllForms();
+        document.getElementById("addIncomeForm").style.display = "block";
+    }
+    function toggleAddExpenseForm() {
+    hideAllForms();  // This should hide all other forms
+    document.getElementById("addExpenseForm").style.display = "block";  // This should show the add expense form
+}
+
+    
+function toggleEditIncomeForm(incomeId) {
+    incomeId = parseInt(incomeId);
+    hideAllForms();
+    var income = document.getElementById("income_" + incomeId);
+    var form = document.getElementById("editIncomeForm");
+    form.querySelector("input[name='name']").value = income.getAttribute("data-name");
+    form.querySelector("input[name='amount']").value = income.getAttribute("data-amount");
+    form.querySelector("input[name='category']").value = income.getAttribute("data-category");
+    form.querySelector("input[name='frequency']").value = income.getAttribute("data-frequency");
+    form.querySelector("input[name='date']").value = income.getAttribute("data-date");
+    form.style.display = "block";
+}
+
+function toggleEditExpenseForm(expenseId) {
+    hideAllForms();
+    var expense = document.getElementById("expense_" + expenseId);
+    var form = document.getElementById("editExpenseForm");
+    if (form) {
+        form.querySelector("input[name='name']").value = expense.getAttribute("data-name");
+        form.querySelector("input[name='amount']").value = expense.getAttribute("data-amount");
+        form.querySelector("input[name='category']").value = expense.getAttribute("data-category");
+        form.querySelector("input[name='frequency']").value = expense.getAttribute("data-frequency");
+        form.querySelector("input[name='date']").value = expense.getAttribute("data-date");
+        form.style.display = "block";
+    } else {
+        console.error("Form not found");
+    }
+}
+
+
+
+    
+    function hideAllForms() {
+        document.getElementById("addIncomeForm").style.display = "none";
+        document.getElementById("editIncomeForm").style.display = "none";
+        document.getElementById("addExpenseForm").style.display = "none";
+        document.getElementById("editExpenseForm").style.display = "none";
+    }
+    
+    function cancelAddIncome() {
+        document.getElementById("addIncomeForm").reset();
+        document.getElementById("addIncomeForm").style.display = "none";
+    }
+    
+    function cancelAddExpense() {
+        document.getElementById("addExpenseForm").reset();
+        document.getElementById("addExpenseForm").style.display = "none";
+    }
+    
+    function cancelEditIncome() {
+        document.getElementById("editIncomeForm").reset();
+        document.getElementById("editIncomeForm").style.display = "none";
+    }
+    
+    function cancelEditExpense() {
+        document.getElementById("editExpenseForm").reset();
+        document.getElementById("editExpenseForm").style.display = "none";
+    }
+    </script>
+    
+{% endblock %}
