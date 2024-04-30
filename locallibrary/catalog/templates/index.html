@@ -2,28 +2,14 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1 class="display-4">Local Library Home</h1>
-      <h2 class="mb-4">Assignment 4 - Bill Jirik</h2>
+      <h1 class="display-4">Finance Tracking Application</h1>
+      <h2 class="mb-4"></h2>
       <div class="row">
         <div class="col-md-6">
-          <p class="lead">The library has the following record counts:</p>
           <ul class="list-group">
-            <li class="list-group-item">
-              <strong>Books:</strong> {{ num_books }}
-            </li>
-            <li class="list-group-item">
-              <strong>Copies:</strong> {{ num_instances }}
-            </li>
-            <li class="list-group-item">
-              <strong>Copies available:</strong> {{ num_instances_available }}
-            </li>
-            <li class="list-group-item">
-              <strong>Authors:</strong> {{ num_authors }}
-            </li>
-            <li class="list-group-item">
-              You have visited this page {{ num_visits }}
-              time{{num_visits|pluralize }}.
-            </li>
+            <div></div>
+            You have visited this page {{ num_visits }}
+            time{{num_visits|pluralize }}.
           </ul>
         </div>
       </div>
@@ -31,12 +17,3 @@
   </div>
 </div>
 {% endblock %}
-
-<footer class="footer py-3 bg-light">
-  <div class="container text-center">
-    <span class="text-muted">
-      You have visited this page {{ num_visits }} time{{ num_visits|pluralize
-      }}.
-    </span>
-  </div>
-</footer>
