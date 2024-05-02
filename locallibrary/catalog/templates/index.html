@@ -1,19 +1,143 @@
-{% extends "base_generic.html" %} {% block content %}
+{% extends "base_generic.html" %}
+{% block content %}
 <div class="container">
   <div class="row">
     <div class="col">
       <h1 class="display-4">Finance Tracking Application</h1>
-      <h2 class="mb-4"></h2>
       <div class="row">
-        <div class="col-md-6">
-          <ul class="list-group">
-            <div></div>
-            You have visited this page {{ num_visits }}
-            time{{num_visits|pluralize }}.
-          </ul>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Total Income:</h5>
+              <p class="card-text">${{ total_income }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Total Expenses:</h5>
+              <p class="card-text">${{ total_expenses }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Current Balance:</h5>
+              <p class="card-text">${{ profit }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- New row for the line chart and pie chart -->
+      <div class="row mt-4">
+        <div class="col-md-8">
+          <div class="card" style="max-width: 850px">
+            <div class="card-body">
+              <h5 class="card-title">Balance Over Time</h5>
+              <canvas id="balanceChart" width="850" height="255"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card" style="max-width: 400px">
+            <div class="card-body">
+              <h5 class="card-title">Profit by Category</h5>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Running Total Profit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for change in balance_changes %}
+                  <tr>
+                    <td>{{ change.category }}</td>
+                    <td>${{ change.balance }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- New row for the profit by category table -->
+      <div class="row mt-2">
+        <div class="col-md-8 mt-0"> <!-- Adjusted margin top -->
+          <div class="card" style="max-width: 400px">
+            <div class="card-body" style="padding-top: 0;"> <!-- Removed padding top -->
+              <h5 class="card-title">Expenses by Category</h5>
+              <canvas id="expenseChart" width="400" height="200"></canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-{% endblock %}
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // JavaScript code to create the pie chart using Chart.js and fetched data
+      var ctx = document.getElementById("expenseChart").getContext("2d");
+      var expensesData = JSON.parse("{{ expenses_data|escapejs }}"); // Fetching expenses data from Django context
+
+      // Create a color palette for the chart
+      var colors = [
+        "rgba(255, 99, 132, 0.7)",
+        "rgba(54, 162, 235, 0.7)",
+        "rgba(255, 206, 86, 0.7)",
+        // Add more colors if needed
+      ];
+
+      // Randomize background colors if categories exceed the provided colors
+      var backgroundColors = colors.slice(0, Object.keys(expensesData).length);
+
+      var expenseChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: Object.keys(expensesData), // Categories as labels
+          datasets: [
+            {
+              label: "Expenses by Category",
+              data: Object.values(expensesData), // Total expenses for each category
+              backgroundColor: backgroundColors, // Background colors for each slice
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          // Configure chart options as needed
+        },
+      });
+      var ctxBalance = document.getElementById("balanceChart").getContext("2d");
+      var balanceData = JSON.parse("{{ balance_data|escapejs }}"); // Fetching balance data from Django context
+
+      var balanceChart = new Chart(ctxBalance, {
+        type: "line",
+        data: {
+          labels: balanceData.dates, // Dates for x-axis
+          datasets: [
+            {
+              label: "Balance Over Time",
+              data: balanceData.balances, // Balances for y-axis
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 2,
+              fill: false,
+            },
+          ],
+        },
+        options: {
+          // Configure chart options as needed
+        },
+      });
+    </script>
+
+    {% endblock %}
+  </div>
+</div>

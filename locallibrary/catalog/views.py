@@ -1,18 +1,65 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import RegistrationForm
 from django.shortcuts import render, redirect
 from .models import IncomeSource, Expense
+import json
+from django.db import models
+from itertools import chain
+
+
+
 
 def index(request):
-    """View function for home page of site."""
-    num_visits = request.session.get('num_visits', 0)
-    request.session['num_visits'] = num_visits + 1
+
+
+    total_income = IncomeSource.objects.filter(user=request.user).aggregate(Sum('amount'))['amount__sum'] or 0
+    total_expenses = Expense.objects.filter(user=request.user).aggregate(Sum('amount'))['amount__sum'] or 0
     
+    profit = total_income - total_expenses
+
+    expenses = Expense.objects.filter(user=request.user)
+    incomes = IncomeSource.objects.filter(user=request.user)
+    expenses_by_category = Expense.objects.filter(user=request.user).values('category').annotate(total=Sum('amount'))
+    expenses_data = {expense['category']: float(expense['total']) for expense in expenses_by_category}
+
+
+    transactions = list(chain(incomes, expenses))
+
+    # Sort the transactions based on the date attribute
+    transactions = sorted(transactions, key=lambda transaction: transaction.date)
+
+    # Initialize the starting balance
+    balance = 0
+    
+    # Create a list to store the balance and category for each transaction
+    balance_changes = []
+
+    # Iterate through each transaction to calculate the balance changes
+    for transaction in transactions:
+        if isinstance(transaction, IncomeSource):
+            balance += transaction.amount
+            category = transaction.category  # Accessing category attribute directly
+        elif isinstance(transaction, Expense):
+            balance -= transaction.amount
+            category = transaction.category  # Accessing category attribute directly
+        else:
+            continue
+
+        balance_changes.append({
+            'category': category,  # Using the extracted category
+            'balance': balance,
+        })
+
+    # Print balance_changes for debugging
+        print(balance_changes)
+
     context = {
-         'num_visits': num_visits,
+         'total_income': total_income,
+         'total_expenses': total_expenses,
+         'profit': profit,
+         'expenses': expenses,
+         'expenses_data': json.dumps(expenses_data),
+          'balance_changes': balance_changes,
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -36,10 +83,14 @@ def register(request):
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import IncomeAddForm, IncomeEditForm, ExpenseAddForm, ExpenseEditForm
 from .models import IncomeSource, Expense
+from django.db.models import Sum
 
 def income_expense_list(request):
     incomes = IncomeSource.objects.filter(user=request.user)
     expenses = Expense.objects.filter(user=request.user)
+
+
+  
     
     income_add_form = IncomeAddForm()
     expense_add_form = ExpenseAddForm()
