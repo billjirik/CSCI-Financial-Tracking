@@ -25,3 +25,137 @@
   font-size: 1.2rem;
 }
 
+
+/* Styles for the income expense list page */
+
+.income_expense_page {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Container styling */
+.income_expense_page .container {
+  width: 90%;
+  margin: auto;
+  max-width: 1200px;
+}
+
+/* Table styling */
+.income_expense_page .table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.income_expense_page .table th, .income_expense_page .table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.income_expense_page .table th {
+  background-color: #e9ecef;
+  color: #333;
+}
+
+.income_expense_page .table tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+.income_expense_page .table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Button styling */
+.income_expense_page button, .income_expense_page .btn {
+  padding: 8px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.income_expense_page .btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.income_expense_page .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.income_expense_page .btn-success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.income_expense_page .btn-success:hover {
+  background-color: #1e7e34;
+}
+
+.income_expense_page .btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.income_expense_page .btn-danger:hover {
+  background-color: #c82333;
+}
+
+.income_expense_page .btn-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.income_expense_page .btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.income_expense_page .btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.income_expense_page .btn-secondary:hover {
+  background-color: #545b62;
+}
+
+/* Form styling */
+
+.income_expense_page input[type='text'], .income_expense_page input[type='date'], 
+.income_expense_page input[type='email'], .income_expense_page input[type='password'],
+.income_expense_page input[type='number'] {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.income_expense_page input[type='submit'], .income_expense_page input[type='button'], 
+.income_expense_page button {
+  width: auto;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.income_expense_page input[type='submit']:hover {
+  background-color: #45a049;
+}
+
+/* Hide/show forms effectively */
+.income_expense_page form[style*="display: none"] {
+  display: none !important;
+}
+

@@ -84,6 +84,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import IncomeAddForm, IncomeEditForm, ExpenseAddForm, ExpenseEditForm
 from .models import IncomeSource, Expense
 from django.db.models import Sum
+from django.http import HttpResponseRedirect
 
 def income_expense_list(request):
     incomes = IncomeSource.objects.filter(user=request.user)
@@ -94,8 +95,8 @@ def income_expense_list(request):
     
     income_add_form = IncomeAddForm()
     expense_add_form = ExpenseAddForm()
-    income_edit_form = None
-    expense_edit_form = None
+    income_edit_form = IncomeEditForm()
+    expense_edit_form = IncomeEditForm()
     
     if request.method == 'POST':
         if 'income_submit' in request.POST:
@@ -112,20 +113,23 @@ def income_expense_list(request):
                 expense.user = request.user
                 expense.save()
                 return redirect('income_expense_list')
-        elif 'edit_income_submit' in request.POST:
-            income_id = request.POST.get('edit_income')
-            income = get_object_or_404(IncomeSource, id=income_id)
-            income_edit_form = IncomeEditForm(request.POST, instance=income)
+            
+        if 'edit_income_submit' in request.POST:
+            income_id = request.POST.get('edit_income_id')
+            instance = get_object_or_404(IncomeSource, id=income_id)
+            income_edit_form = IncomeEditForm(request.POST, instance=instance)
             if income_edit_form.is_valid():
                 income_edit_form.save()
                 return redirect('income_expense_list')
+
         elif 'edit_expense_submit' in request.POST:
-            expense_id = request.POST.get('edit_expense')
-            expense = get_object_or_404(Expense, id=expense_id)
-            expense_edit_form = ExpenseEditForm(request.POST, instance=expense)
+            expense_id = request.POST.get('edit_expense_id')
+            instance = get_object_or_404(Expense, id=expense_id)
+            expense_edit_form = ExpenseEditForm(request.POST, instance=instance)
             if expense_edit_form.is_valid():
                 expense_edit_form.save()
                 return redirect('income_expense_list')
+
         elif 'delete_expense' in request.POST:
             expense_id = request.POST.get('delete_expense')
             expense = get_object_or_404(Expense, id=expense_id)
@@ -136,6 +140,10 @@ def income_expense_list(request):
             income = get_object_or_404(IncomeSource, id=income_id)
             income.delete()
             return redirect('income_expense_list')
+        else:
+            # GET method handling, e.g., initial page load
+            income_edit_form = IncomeEditForm()
+            expense_edit_form = ExpenseEditForm()
 
     return render(request, 'income_expense_list.html', {
         'incomes': incomes,
