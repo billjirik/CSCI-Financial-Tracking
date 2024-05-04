@@ -35,10 +35,10 @@
         <div class="col-md-8">
           <div class="card" style="max-width: 850px">
             <div class="card-body">
-              <h5 class="card-title">Balance Over Time</h5>
-              <canvas id="balanceChart" width="850" height="255"></canvas>
+                <h5 class="card-title">Balance Over Time</h5>
+                <canvas id="balanceChart" width="850" height="255"></canvas>
             </div>
-          </div>
+        </div>
         </div>
         <div class="col-md-4">
           <div class="card" style="max-width: 400px">
@@ -48,7 +48,7 @@
                 <thead>
                   <tr>
                     <th>Category</th>
-                    <th>Running Total Profit</th>
+                    <th>Running Total Balance</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -92,7 +92,7 @@
         "rgba(255, 99, 132, 0.7)",
         "rgba(54, 162, 235, 0.7)",
         "rgba(255, 206, 86, 0.7)",
-        // Add more colors if needed
+        
       ];
 
       // Randomize background colors if categories exceed the provided colors
@@ -115,27 +115,32 @@
           // Configure chart options as needed
         },
       });
-      var ctxBalance = document.getElementById("balanceChart").getContext("2d");
-      var balanceData = JSON.parse("{{ balance_data|escapejs }}"); // Fetching balance data from Django context
-
-      var balanceChart = new Chart(ctxBalance, {
-        type: "line",
-        data: {
-          labels: balanceData.dates, // Dates for x-axis
-          datasets: [
-            {
-              label: "Balance Over Time",
-              data: balanceData.balances, // Balances for y-axis
-              borderColor: "rgba(75, 192, 192, 1)",
-              borderWidth: 2,
-              fill: false,
-            },
-          ],
-        },
-        options: {
-          // Configure chart options as needed
-        },
-      });
+      document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('balanceChart').getContext('2d');
+            var balanceChartData = JSON.parse('{{ balance_chart_data|safe }}');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: balanceChartData.dates,
+                    datasets: [{
+                        label: 'Balance Over Time',
+                        data: balanceChartData.balances,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+        });
     </script>
 
     {% endblock %}

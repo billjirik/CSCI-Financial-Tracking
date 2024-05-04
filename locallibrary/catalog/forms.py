@@ -24,6 +24,9 @@ class IncomeAddForm(forms.ModelForm):
     class Meta:
         model = IncomeSource
         fields = ['name', 'amount', 'category', 'frequency', 'date']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def clean_date(self):
         cleaned_data = super().clean()
@@ -36,6 +39,9 @@ class ExpenseAddForm(forms.ModelForm):
     class Meta:
         model = Expense
         fields = ['name', 'amount', 'category', 'frequency', 'date']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def clean_date(self):
         cleaned_data = super().clean()
@@ -48,9 +54,15 @@ class ExpenseEditForm(forms.ModelForm):
     class Meta:
         model = Expense
         fields = ['name', 'amount', 'category', 'frequency', 'date']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
 class IncomeEditForm(forms.ModelForm):
     class Meta:
         model = IncomeSource
         fields = ['name', 'amount', 'category', 'frequency', 'date']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }
 

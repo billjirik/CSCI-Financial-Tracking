@@ -159,3 +159,7 @@
   display: none !important;
 }
 
+
+.chart-container {
+  height: 400px;  /* or any other height */
+}
