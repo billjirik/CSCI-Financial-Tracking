@@ -51,6 +51,8 @@ def index(request):
         balance_dates.append(transaction.date.strftime('%Y-%m-%d'))
         balances.append(balance)
 
+    balance_changes = list(reversed(balance_changes))
+
     # Preparing data for the balance chart
     balance_chart_data = json.dumps({
         'dates': balance_dates,

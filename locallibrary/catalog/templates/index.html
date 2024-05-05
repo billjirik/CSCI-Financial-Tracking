@@ -43,7 +43,7 @@
         <div class="col-md-4">
           <div class="card" style="max-width: 400px">
             <div class="card-body">
-              <h5 class="card-title">Profit by Category</h5>
+              <h5 class="card-title">Profit by Category (Most Recent)</h5>
               <table class="table">
                 <thead>
                   <tr>
@@ -52,7 +52,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for change in balance_changes %}
+                  {% for change in balance_changes|slice:":6" %}
                   <tr>
                     <td>{{ change.category }}</td>
                     <td>${{ change.balance }}</td>
